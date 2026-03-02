@@ -1,6 +1,7 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Threejs](https://img.shields.io/badge/threejs-black?style=for-the-badge&logo=three.js&logoColor=white)
+![EmailJS](https://img.shields.io/badge/EmailJS-FFB300?style=for-the-badge&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fjjoaom%2FWebGL-Portfolio%2Fmain%2Fpublic%2Fimg%2Femailjs.png&logoWidth=18)
 
 # Portfólio Profissional - WebGl
 
