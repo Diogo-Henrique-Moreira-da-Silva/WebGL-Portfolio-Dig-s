@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Water } from "three/examples/jsm/objects/Water.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -26,9 +26,52 @@ export function createScene(canvas) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.physicallyCorrectLights = true;
 
-  // Terreno 
+  // Luz principal (sol)
+  const sun = new THREE.DirectionalLight(0xffffff, 1.0);
+  sun.position.set(300, 500, 200); // posição do sol
+  // Sombra do sol
+  sun.castShadow = true;
+  sun.shadow.mapSize.width = 4096;
+  sun.shadow.mapSize.height = 4096;
+  sun.shadow.camera.near = 1;
+  sun.shadow.camera.far = 1000;
+  sun.shadow.camera.left = -150;
+  sun.shadow.camera.right = 150;
+  sun.shadow.camera.top = 150;
+  sun.shadow.camera.bottom = -150;
+  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
 
-  // Carregar texturas 
+  scene.add(sun);
+  scene.add(ambient);
+
+  const sunDirection = new THREE.Vector3()
+    .copy(sun.position)
+    .normalize();
+
+  // Fog para efeito de raios de sol visíveis
+  scene.fog = new THREE.FogExp2(0xcfeeff, 0.005);
+
+  // Skybox e ambiente
+  new EXRLoader().load("/texture/sky2.exr", (texture) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+
+    scene.background = texture;
+
+    // Environment map para reflexos
+    scene.environment = texture;
+
+    // Ajuste de intensidade do reflexo
+    scene.traverse((obj) => {
+      if (obj.isMesh && obj.material.envMap) {
+        obj.material.envMapIntensity = 0.3; // reduz reflexo do skybox
+        obj.material.needsUpdate = true;
+      }
+    });
+  });
+
+  // Terreno
+
+  // Carregar texturas
   const loader = new THREE.TextureLoader();
   /*
   Textura da grama: https://aitextured.com/textures/grass/realistic-grass-seamless-texture.html
@@ -45,17 +88,20 @@ export function createScene(canvas) {
     tex.repeat.set(512, 512); // ajuste para cobrir o terreno
   });
 
-  // Geometria do terreno 
-  const size = 500;
-  const segments = 256;
+  // Geometria do terreno
+  const size = 512;
+  const segments = 128;
   const geometry = new THREE.PlaneGeometry(size, size, segments, segments);
   geometry.rotateX(-Math.PI / 2);
 
   // UV2 necessário para AO
-  geometry.attributes.uv2 = geometry.attributes.uv;
+  geometry.setAttribute(
+    "uv2",
+    new THREE.BufferAttribute(geometry.attributes.uv.array, 2),
+  );
   // Ondulações suaves do terreno
   const pos = geometry.attributes.position;
-  const flatRadius = 40;
+  const flatRadius = 32;
 
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
@@ -68,7 +114,7 @@ export function createScene(canvas) {
       const t = Math.min((distance - flatRadius) / 120, 1);
       const smooth = t * t * (3 - 2 * t);
       const large =
-        Math.sin(x * 0.004) * 5 + 
+        Math.sin(x * 0.004) * 5 +
         Math.sin(z * 0.004) * 4 +
         Math.sin((x + z) * 0.003) * 3;
       height = large * smooth;
@@ -79,7 +125,7 @@ export function createScene(canvas) {
   geometry.computeVertexNormals();
   pos.needsUpdate = true;
 
-  // Material estilo Vista 
+  // Material estilo Vista
   const material = new THREE.MeshPhysicalMaterial({
     map: albedo,
     normalMap: normalMap,
@@ -98,36 +144,65 @@ export function createScene(canvas) {
   albedo.minFilter = THREE.LinearMipMapLinearFilter;
   albedo.magFilter = THREE.LinearFilter;
 
-  // Mesh 
+  // Mesh
   const ground = new THREE.Mesh(geometry, material);
   ground.position.y = 0.14;
   scene.add(ground);
 
-  // Fog suave para horizonte infinito 
-  scene.fog = new THREE.FogExp2(0xcfeeff, 0.0015);
-  // cor próxima ao céu, densidade baixa para desaparecer gradualmente
 
-  // Plano de água ao redor do terreno 
+  // Plano de água ao redor do terreno
   const waterGeometry = new THREE.PlaneGeometry(2000, 2000);
-  const waterMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x5ea7c4,
-    roughness: 0.6, // ondulações suaves
-    metalness: 0.1, // leve reflexo
-    transparent: true,
-    opacity: 0.5, // translúcido
-    reflectivity: 0.3,
+
+  const water = new Water(waterGeometry, {
+    textureWidth: 1024,
+    textureHeight: 1024,
+    waterNormals: new THREE.TextureLoader().load(
+      "/texture/water_normal.jpg",
+      (texture) => {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      }
+    ),
+    sunDirection: sunDirection,
+    sunColor: 0xffffff,
+    waterColor: 0x88ddee,
+    distortionScale: 0.8,
+    fog: true,
   });
-  const water = new THREE.Mesh(waterGeometry, waterMaterial);
-  water.rotateX(-Math.PI / 2);
-  water.position.y = -1;
+
+  water.material.transparent = true;
+  water.material.opacity = 0.85;
+  water.material.uniforms['size'].value = 2.5; // ondas menores
+  water.material.uniforms['distortionScale'].value = 0.6;
+
+  water.rotation.x = -Math.PI / 2;
+  water.position.y = 0.12;
   scene.add(water);
+
+  const borderGeometry = new THREE.RingGeometry(260, 280, 128);
+  borderGeometry.rotateX(-Math.PI / 2);
+
+  const borderMaterial = new THREE.MeshBasicMaterial({
+    color: 0xbbeeff,
+    transparent: true,
+    opacity: 0.4,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+
+  const waterBorder = new THREE.Mesh(borderGeometry, borderMaterial);
+  waterBorder.position.y = 0.13;
+  scene.add(waterBorder);
 
   //Texturas
   const textureLoader = new THREE.TextureLoader();
 
-  const texturaGotasNormal = textureLoader.load("/texture/water_drops_normal.png");
+  const texturaGotasNormal = textureLoader.load(
+    "/texture/water_drops_normal.png",
+  );
   const texturaPiso = textureLoader.load("/texture/shiny_marble.png");
-  const texturaMetalEscovado = textureLoader.load("/texture/brushed_metal_normal.jpg");
+  const texturaMetalEscovado = textureLoader.load(
+    "/texture/brushed_metal_normal.jpg",
+  );
 
   texturaGotasNormal.colorSpace = THREE.NoColorSpace;
   texturaMetalEscovado.colorSpace = THREE.NoColorSpace;
@@ -149,7 +224,7 @@ export function createScene(canvas) {
     .then((json) => {
       const objeto = new THREE.ObjectLoader().parse(json.scene);
 
-      // ARREDONDANDO PISOS 
+      // ARREDONDANDO PISOS
 
       const nomePisos = ["caminho_1", "caminho_2", "caminho_3", "caminho_4"];
 
@@ -178,7 +253,7 @@ export function createScene(canvas) {
           piso.material.needsUpdate = true;
         }
       });
-      // MELHORANDO O PISO E PREDIOS 
+      // MELHORANDO O PISO E PREDIOS
       const nomePisosePredios = [
         "plataform_start",
         "caminho_2",
@@ -208,7 +283,7 @@ export function createScene(canvas) {
         }
       });
 
-      // MELHORANDO A BOLHA DE ÁGUA 
+      // MELHORANDO A BOLHA DE ÁGUA
       const nomesBolhas = ["bolha_flutuante", "plataform_2", "topo_predio_4"];
 
       nomesBolhas.forEach((nome) => {
@@ -216,16 +291,16 @@ export function createScene(canvas) {
         if (painel && painel.material) {
           painel.material.normalMap = texturaGotasNormal; // Aplica o relevo das gotas
           painel.material.normalScale.set(0.5, 0.5);
-          painel.material.color.setHex(0xd4f0ff); 
-          painel.material.transmission = 0.85; 
+          painel.material.color.setHex(0xd4f0ff);
+          painel.material.transmission = 0.85;
           painel.material.opacity = 1.0;
-          painel.material.iridescence = 0.7; 
+          painel.material.iridescence = 0.7;
           painel.material.iridescenceIOR = 1.3;
-          painel.material.iridescenceThicknessRange = [100, 400]; 
+          painel.material.iridescenceThicknessRange = [100, 400];
           painel.material.roughness = 0.0;
           painel.material.clearcoat = 1.0;
           painel.material.clearcoatRoughness = 0.0;
-          painel.material.ior = 1.5; 
+          painel.material.ior = 1.5;
         }
       });
 
@@ -243,49 +318,12 @@ export function createScene(canvas) {
       scene.add(objeto);
     });
 
-  // Luz principal (sol)
-  const sun = new THREE.DirectionalLight(0xffffff, 1.0);
-  sun.position.set(300, 500, 200); // posição do sol
-  // Sombra do sol
-  sun.castShadow = true;
-  sun.shadow.mapSize.width = 4096;
-  sun.shadow.mapSize.height = 4096;
-  sun.shadow.camera.near = 1;
-  sun.shadow.camera.far = 1000;
-  sun.shadow.camera.left = -150;
-  sun.shadow.camera.right = 150;
-  sun.shadow.camera.top = 150;
-  sun.shadow.camera.bottom = -150;
-  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
 
-  scene.add(sun);
-  scene.add(ambient);
 
-  // Fog para efeito de raios de sol visíveis
-  scene.fog = new THREE.FogExp2(0xcfeeff, 0.005);
-
-  // Skybox e ambiente
-  new EXRLoader().load("/texture/sky2.exr", (texture) => {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-
-    scene.background = texture;
-
-    // Environment map para reflexos
-    scene.environment = texture;
-
-    // Ajuste de intensidade do reflexo
-    scene.traverse((obj) => {
-      if (obj.isMesh && obj.material.envMap) {
-        obj.material.envMapIntensity = 0.3; // reduz reflexo do skybox
-        obj.material.needsUpdate = true;
-      }
-    });
-  });
-
-  // GLB 
+  // GLB
   //new GLTFLoader().load("/campus_nofloor.glb", (gltf) => scene.add(gltf.scene));
 
-  // Composer / Bloom 
+  // Composer / Bloom
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloomPass = new UnrealBloomPass(
@@ -295,6 +333,18 @@ export function createScene(canvas) {
     0.4,
   );
   composer.addPass(bloomPass);
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const elapsed = clock.getElapsedTime();
+    water.material.uniforms["time"].value = elapsed * 0.4;
+
+    composer.render();
+  }
+
+  animate();
 
   return { scene, camera, renderer, composer, ground };
 }
