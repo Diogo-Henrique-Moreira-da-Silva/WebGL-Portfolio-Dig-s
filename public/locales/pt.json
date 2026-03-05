@@ -1,0 +1,56 @@
+{
+  "about": {
+    "name": "João Silva",
+    "role": "Engenheiro de Software",
+    "bio": "Estudante de Engenharia de Software na PUC Minas",
+    "photo": "/assets/foto.jpg",
+    "location": "Brasil",
+    "email": "joao@email.com",
+    "linkedin": "https://linkedin.com/in/joaosilva",
+    "github": "https://github.com/joaosilva"
+  },
+  "experience": {
+    "jobs": [
+      {
+        "company": "empresa de ti",
+        "role": "Estagiário de Escravidão",
+        "period": "2001 - atual",
+        "description": "Desenvolvimento de levar café quente para supervisores."
+      }
+    ],
+    "education": [
+      {
+        "institution": "PUC Minas",
+        "degree": "Engenharia de Software",
+        "period": "2023 - 2027",
+        "description": "Foco em..."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "projeto 1",
+      "description": "Plataforma para logística e monitoramento de sensores em tempo real.",
+      "tags": ["IoT", "Docker", "GitHub Actions"],
+      "link": "https://github.com/"
+    },
+    {
+      "title": "projeto 2",
+      "description": "E-commerce",
+      "tags": ["E-commerce", "Java", "SonarQube"],
+      "link": "https://github.com/j"
+    },
+    {
+      "title": "projeto 3",
+      "description": "Aplicativo mobile de sustentabilidade",
+      "tags": ["Flutter", "Qodana", "CI/CD", "Android"],
+      "link": "https://github.com/"
+    }
+  ],
+  "contact": {
+    "message": "Aberto a oportunidades em Backend, Frontend e Engenharia de Software.",
+    "email": "joao@email.com",
+    "linkedin": "https://linkedin.com/in/joao",
+    "github": "https://github.com/joao"
+  }
+}

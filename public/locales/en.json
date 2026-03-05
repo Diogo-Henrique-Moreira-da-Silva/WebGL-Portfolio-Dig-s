@@ -1,0 +1,56 @@
+{
+  "about": {
+    "name": "João Silva",
+    "role": "Software Engineer",
+    "bio": "Software Engineering student at PUC Minas",
+    "photo": "/assets/foto.jpg",
+    "location": "Brazil",
+    "email": "joao@email.com",
+    "linkedin": "https://linkedin.com/in/joaosilva",
+    "github": "https://github.com/joaosilva"
+  },
+  "experience": {
+    "jobs": [
+      {
+        "company": "IT company",
+        "role": "Slavery Intern",
+        "period": "2001 - present",
+        "description": "Responsible for delivering hot coffee to supervisors."
+      }
+    ],
+    "education": [
+      {
+        "institution": "PUC Minas",
+        "degree": "Software Engineering",
+        "period": "2023 - 2027",
+        "description": "Focus on..."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "project 1",
+      "description": "Platform for logistics and real-time sensor monitoring.",
+      "tags": ["IoT", "Docker", "GitHub Actions"],
+      "link": "https://github.com/"
+    },
+    {
+      "title": "project 2",
+      "description": "E-commerce",
+      "tags": ["E-commerce", "Java", "SonarQube"],
+      "link": "https://github.com/j"
+    },
+    {
+      "title": "project 3",
+      "description": "Sustainability mobile app",
+      "tags": ["Flutter", "Qodana", "CI/CD", "Android"],
+      "link": "https://github.com/"
+    }
+  ],
+  "contact": {
+    "message": "Open to opportunities in Backend, Frontend, and Software Engineering.",
+    "email": "joao@email.com",
+    "linkedin": "https://linkedin.com/in/joao",
+    "github": "https://github.com/joao"
+  }
+}
