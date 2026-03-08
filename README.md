@@ -3,6 +3,15 @@
 ![Threejs](https://img.shields.io/badge/threejs-black?style=for-the-badge&logo=three.js&logoColor=white)
 ![EmailJS](https://img.shields.io/badge/EmailJS-FFB300?style=for-the-badge&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fjjoaom%2FWebGL-Portfolio%2Fmain%2Fpublic%2Fimg%2Femailjs.png&logoWidth=18)
 
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=bugs)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=jjoaom_WebGL-Portfolio&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=jjoaom_WebGL-Portfolio)
+
+
 # Portfólio Profissional - WebGl
 
 

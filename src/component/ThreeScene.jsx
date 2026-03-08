@@ -4,10 +4,10 @@ import { setupPlayerControls, ScreenOverlays } from "./PlayerControls";
 import ScreenPortal from "./ScreenPortal";
 import * as THREE from "three";
 
-import { About }      from "../pages/About";
-import { Projects }   from "../pages/Projects";
+import { About } from "../pages/About";
+import { Projects } from "../pages/Projects";
 import { Experience } from "../pages/Experience";
-import { Contact }    from "../pages/Contact";
+import { Contact } from "../pages/Contact";
 
 const SCREEN_CONFIGS = [
   {
@@ -48,14 +48,25 @@ function Panel2D({ screenIndex, onClose }) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       style={{
-        position: "fixed", inset: 0,
-        zIndex: 999999, pointerEvents: "auto",
+        position: "fixed",
+        inset: 0,
+        zIndex: 999999,
+        pointerEvents: "auto",
         background: "rgba(0,0,0,0.25)",
         backdropFilter: "blur(2px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
-      onMouseDown={(e) => { if (e.currentTarget === e.target) onClose(); }}
+      onMouseDown={(e) => {
+        if (e.currentTarget === e.target) onClose();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
     >
       <div style={{
         width: "min(980px, 92vw)", height: "min(620px, 86vh)",
@@ -90,18 +101,18 @@ function Panel2D({ screenIndex, onClose }) {
 
 //  ThreeScene 
 export default function ThreeScene() {
-  const canvasRef   = useRef(null);
+  const canvasRef = useRef(null);
   const cssLayerRef = useRef(null);
 
   const screenElementsRef = useRef({});
-  const mountedCountRef   = useRef(0);
+  const mountedCountRef = useRef(0);
   const [screenDefs, setScreenDefs] = useState(null);
-  const [panel2D, setPanel2D]       = useState(null);
+  const [panel2D, setPanel2D] = useState(null);
 
   // Ref que o loop imperativo usa para atualizar os overlays JSX
   const notifyRef = useRef(null);
 
-  const handleOpen2D  = useCallback((index) => setPanel2D(index), []);
+  const handleOpen2D = useCallback((index) => setPanel2D(index), []);
   const handleClose2D = useCallback(() => setPanel2D(null), []);
 
   const closeFromReact = useCallback(() => {
@@ -127,7 +138,7 @@ export default function ThreeScene() {
 
   useEffect(() => {
     if (!screenDefs) return;
-    const canvas   = canvasRef.current;
+    const canvas = canvasRef.current;
     const cssLayer = cssLayerRef.current;
     if (!canvas || !cssLayer) return;
 
@@ -136,7 +147,7 @@ export default function ThreeScene() {
     const cleanup = setupPlayerControls({
       camera, renderer, composer, ground, scene, cssLayer,
       screenDefs,
-      onOpen2D:  handleOpen2D,
+      onOpen2D: handleOpen2D,
       tickWater,
       onClose2D: handleClose2D,
       notifyRef,
