@@ -3,10 +3,10 @@
     "name": "João Silva",
     "role": "Engenheiro de Software",
     "bio": "Estudante de Engenharia de Software na PUC Minas",
-    "photo": "/assets/foto.jpg",
+    "photo": "/assets/pfp.png",
     "location": "Brasil",
     "email": "joao@email.com",
-    "linkedin": "https://linkedin.com/in/joaosilva",
+    "linkedin": "https://linkedin.com/in/joaotestefake",
     "github": "https://github.com/joaosilva"
   },
   "experience": {

@@ -6,15 +6,13 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
-// Essa função é responsável pela geração da cena, gráficos, céu, e terreno
-
 export function createScene(canvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
     0.5,
-    300,
+    600,
   );
   camera.position.set(42, 1.7, 0);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -26,325 +24,247 @@ export function createScene(canvas) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.physicallyCorrectLights = true;
 
-  // Luz principal (sol)
+  // Luzes
   const sun = new THREE.DirectionalLight(0xffffff, 1.0);
-  sun.position.set(300, 500, 200); // posição do sol
-  // Sombra do sol
+  sun.position.set(300, 500, 200);
   sun.castShadow = true;
-  sun.shadow.mapSize.width = 4096;
+  sun.shadow.mapSize.width  = 4096;
   sun.shadow.mapSize.height = 4096;
-  sun.shadow.camera.near = 1;
-  sun.shadow.camera.far = 1000;
-  sun.shadow.camera.left = -150;
-  sun.shadow.camera.right = 150;
-  sun.shadow.camera.top = 150;
+  sun.shadow.camera.near   = 1;
+  sun.shadow.camera.far    = 1000;
+  sun.shadow.camera.left   = -150;
+  sun.shadow.camera.right  = 150;
+  sun.shadow.camera.top    = 150;
   sun.shadow.camera.bottom = -150;
   const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+  scene.add(sun, ambient);
 
-  scene.add(sun);
-  scene.add(ambient);
+  const sunDirection = new THREE.Vector3().copy(sun.position).normalize();
 
-  const sunDirection = new THREE.Vector3()
-    .copy(sun.position)
-    .normalize();
+  scene.fog = new THREE.FogExp2(0xabf7b7, 0.002); // mais suave, montanhas visíveis ao fundo
 
-  // Fog para efeito de raios de sol visíveis
-  scene.fog = new THREE.FogExp2(0xcfeeff, 0.005);
-
-  // Skybox e ambiente
+  // Skybox
   new EXRLoader().load("/texture/sky2.exr", (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
-
     scene.background = texture;
-
-    // Environment map para reflexos
     scene.environment = texture;
-
-    // Ajuste de intensidade do reflexo
     scene.traverse((obj) => {
       if (obj.isMesh && obj.material.envMap) {
-        obj.material.envMapIntensity = 0.3; // reduz reflexo do skybox
+        obj.material.envMapIntensity = 0.3;
         obj.material.needsUpdate = true;
       }
     });
   });
 
   // Terreno
-
-  // Carregar texturas
   const loader = new THREE.TextureLoader();
-  /*
-  Textura da grama: https://aitextured.com/textures/grass/realistic-grass-seamless-texture.html
-  Texturas albedo, normal, ao, heigh, orm, roughness, heigh feitas através de https://aitextured.com/pbr-texture-generator/
-  */
-  const albedo = loader.load("/texture/grass__Png_albedo.png");
+  const albedo    = loader.load("/texture/grass__Png_albedo.png");
   const normalMap = loader.load("/texture/grass__Png_normal.png");
-  const aoMap = loader.load("/texture/grass__Png_ao.png");
+  const aoMap     = loader.load("/texture/grass__Png_ao.png");
   const heightMap = loader.load("/texture/grass__Png_height.png");
 
-  // Ajuste de repetição da textura
   [albedo, normalMap, aoMap, heightMap].forEach((tex) => {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(512, 512); // ajuste para cobrir o terreno
+    tex.repeat.set(512, 512);
   });
 
-  // Geometria do terreno
-  const size = 512;
-  const segments = 128;
+  // Terreno estilo Windows XP
+  // Área central plana onde o jogador anda
+  const size = 800, segments = 256; // maior e mais detalhado
   const geometry = new THREE.PlaneGeometry(size, size, segments, segments);
   geometry.rotateX(-Math.PI / 2);
+  geometry.setAttribute("uv2", new THREE.BufferAttribute(geometry.attributes.uv.array, 2));
 
-  // UV2 necessário para AO
-  geometry.setAttribute(
-    "uv2",
-    new THREE.BufferAttribute(geometry.attributes.uv.array, 2),
-  );
-  // Ondulações suaves do terreno
   const pos = geometry.attributes.position;
-  const flatRadius = 32;
+
+  // Área plana no centro (onde o jogador fica)
+  const FLAT_RADIUS  = 60;   // raio da área completamente plana
+  const BLEND_START  = 50;   // onde começa a subir
+  const BLEND_END    = 350;  // onde atinge altura máxima
+
+  const VALLEY_FLOOR = -1.5;
 
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const z = pos.getZ(i);
-    const distance = Math.sqrt(x * x + z * z);
+    const dist = Math.sqrt(x * x + z * z);
 
-    let height = 0;
-    height = Math.max(0, Math.min(height, 0.158));
-    if (distance > flatRadius) {
-      const t = Math.min((distance - flatRadius) / 120, 1);
-      const smooth = t * t * (3 - 2 * t);
-      const large =
-        Math.sin(x * 0.004) * 5 +
-        Math.sin(z * 0.004) * 4 +
-        Math.sin((x + z) * 0.003) * 3;
-      height = large * smooth;
+    if (dist <= FLAT_RADIUS) {
+      pos.setY(i, 0);
+      continue;
     }
-    pos.setY(i, height);
+
+    // Blend suave do centro para as bordas
+    const t     = Math.min((dist - BLEND_START) / (BLEND_END - BLEND_START), 1.0);
+    const blend = t * t * (3 - 2 * t);
+
+    // Colinas principais, cristas longas e assimétricas
+    const hill1 = Math.sin(x * 0.009 + 0.3)  * Math.cos(z * 0.007 - 0.8) * 18;
+    const hill2 = Math.sin(x * 0.006 - 1.2)  * Math.cos(z * 0.011 + 0.5) * 14;
+    const hill3 = Math.sin((x + z) * 0.005 + 0.9) * 10;
+
+    // Detalhe médio, ondulações que criam os vales entre as colinas
+    const detail1 = Math.sin(x * 0.018 + z * 0.013 + 1.1) * 5;
+    const detail2 = Math.cos(x * 0.014 - z * 0.019 - 0.4) * 4;
+
+    // Detalhe fino, irregularidades nas encostas
+    const fine = Math.sin(x * 0.035 + 0.7) * Math.sin(z * 0.028 - 0.3) * 1.5;
+
+    const raw = hill1 + hill2 + hill3 + detail1 + detail2 + fine;
+
+    // Nas bordas externas força o terreno para cima (horizonte elevado como o Bliss)
+    // Nas partes intermediárias deixa vales naturais aparecerem
+    let h;
+    if (t < 0.35) {
+      // Zona de transição vales livres, água pode aparecer
+      h = Math.max(VALLEY_FLOOR, raw) * blend;
+    } else {
+      // Bordas
+      const minHeight = (t - 0.35) / 0.65 * 8;
+      h = Math.max(minHeight, raw) * blend;
+    }
+
+    pos.setY(i, h);
   }
 
   geometry.computeVertexNormals();
   pos.needsUpdate = true;
 
-  // Material estilo Vista
-  const material = new THREE.MeshPhysicalMaterial({
-    map: albedo,
-    normalMap: normalMap,
-    normalScale: new THREE.Vector2(0.3, 0.3), // normal map leve
-    aoMap: aoMap,
-    aoMapIntensity: 0.15, // sombra leve
-    displacementMap: heightMap,
-    displacementScale: 0.03, // ondulação mínima
-    color: new THREE.Color(0x6edc5a),
-    roughness: 0.7, // suave, sem brilho forte
-    metalness: 0, // grama não metálica
-    clearcoat: 0, // sem brilho extra
-    envMapIntensity: 0, // sem reflexo do ambiente
-  });
-
   albedo.minFilter = THREE.LinearMipMapLinearFilter;
   albedo.magFilter = THREE.LinearFilter;
 
-  // Mesh
+  const material = new THREE.MeshPhysicalMaterial({
+    map: albedo, normalMap, normalScale: new THREE.Vector2(0.3, 0.3),
+    aoMap, aoMapIntensity: 0.15,
+    displacementMap: heightMap, displacementScale: 0.03,
+    color: new THREE.Color(0x6edc5a),
+    roughness: 0.7, metalness: 0, clearcoat: 0, envMapIntensity: 0,
+  });
+
   const ground = new THREE.Mesh(geometry, material);
   ground.position.y = 0.14;
   scene.add(ground);
 
-
-  // Plano de água ao redor do terreno
-  const waterGeometry = new THREE.PlaneGeometry(2000, 2000);
-
-  const water = new Water(waterGeometry, {
-    textureWidth: 1024,
-    textureHeight: 1024,
-    waterNormals: new THREE.TextureLoader().load(
-      "/texture/water_normal.jpg",
-      (texture) => {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      }
-    ),
-    sunDirection: sunDirection,
-    sunColor: 0xffffff,
-    waterColor: 0x88ddee,
-    distortionScale: 0.8,
-    fog: true,
+  // Água
+  const water = new Water(new THREE.PlaneGeometry(2000, 2000), {
+    textureWidth: 2048, textureHeight: 2048,
+    waterNormals: new THREE.TextureLoader().load("/texture/water_normal.jpg", (t) => {
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    }),
+    sunDirection, sunColor: 0xffffff, waterColor: 0x0a6e8a,
+    distortionScale: 0.8, fog: true,
   });
-
   water.material.transparent = true;
-  water.material.opacity = 0.85;
-  water.material.uniforms['size'].value = 2.5; // ondas menores
-  water.material.uniforms['distortionScale'].value = 0.6;
-
+  water.material.opacity = 0.10;
+  water.material.uniforms["size"].value = 2.5;
+  water.material.uniforms["distortionScale"].value = 0.4;
   water.rotation.x = -Math.PI / 2;
   water.position.y = 0.12;
+
+  water.material.transparent  = true;
+  water.material.opacity      = 0.78;   // deixa ver o fundo
+  water.material.depthWrite   = false;  // evita artefatos de profundidade com o terreno
+  water.material.blending     = THREE.NormalBlending;
+
+  // Uniforms do shader Water.js
+  water.material.uniforms["size"].value           = 6.0;   // escala das ondas normais (maior = ondas menores/mais detalhadas)
+  water.material.uniforms["distortionScale"].value = 0.4;  // amplitude da distorção da refração
+  water.material.uniforms["alpha"].value  
   scene.add(water);
 
-  const borderGeometry = new THREE.RingGeometry(260, 280, 128);
-  borderGeometry.rotateX(-Math.PI / 2);
-
-  const borderMaterial = new THREE.MeshBasicMaterial({
-    color: 0xbbeeff,
-    transparent: true,
-    opacity: 0.4,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-
-  const waterBorder = new THREE.Mesh(borderGeometry, borderMaterial);
+  const borderGeo = new THREE.RingGeometry(260, 280, 128);
+  borderGeo.rotateX(-Math.PI / 2);
+  const waterBorder = new THREE.Mesh(borderGeo, new THREE.MeshBasicMaterial({
+    color: 0xbbeeff, transparent: true, opacity: 0.4,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  }));
   waterBorder.position.y = 0.13;
   scene.add(waterBorder);
 
-  //Texturas
+  // Texturas extras
   const textureLoader = new THREE.TextureLoader();
+  const texturaGotasNormal  = textureLoader.load("/texture/water_drops_normal.png");
+  const texturaPiso         = textureLoader.load("/texture/shiny_marble.png");
+  const texturaMetalEscovado = textureLoader.load("/texture/brushed_metal_normal.jpg");
 
-  const texturaGotasNormal = textureLoader.load(
-    "/texture/water_drops_normal.png",
-  );
-  const texturaPiso = textureLoader.load("/texture/shiny_marble.png");
-  const texturaMetalEscovado = textureLoader.load(
-    "/texture/brushed_metal_normal.jpg",
-  );
-
-  texturaGotasNormal.colorSpace = THREE.NoColorSpace;
+  texturaGotasNormal.colorSpace   = THREE.NoColorSpace;
   texturaMetalEscovado.colorSpace = THREE.NoColorSpace;
+  texturaGotasNormal.wrapS = texturaGotasNormal.wrapT = THREE.RepeatWrapping;
+  texturaGotasNormal.repeat.set(32, 32);
+  texturaPiso.wrapS = texturaPiso.wrapT = THREE.RepeatWrapping;
+  texturaPiso.repeat.set(10, 10);
 
-  // Configuração para a textura se repetir corretamente
-
-  texturaGotasNormal.wrapS = THREE.RepeatWrapping;
-  texturaGotasNormal.wrapT = THREE.RepeatWrapping;
-  texturaGotasNormal.repeat.set(32, 32); // Repete a imagem 4x para as gotas ficarem menores
-
-  texturaPiso.wrapS = THREE.RepeatWrapping;
-  texturaPiso.wrapT = THREE.RepeatWrapping;
-  texturaPiso.repeat.set(10, 10); // Repete a imagem 4x para as gotas ficarem menores
-
-  // Carregamento via JSON exportado do Three.js Editor
-  // Vantagem contra GLB por velocidade e customização via JSON(apesar de ser verbosa)
+  // Cena JSON
   fetch("/app.json")
-    .then((response) => response.json())
+    .then((r) => r.json())
     .then((json) => {
       const objeto = new THREE.ObjectLoader().parse(json.scene);
 
-      // ARREDONDANDO PISOS
-
-      const nomePisos = ["caminho_1", "caminho_2", "caminho_3", "caminho_4"];
-
-      nomePisos.forEach((nome) => {
+      ["caminho_1","caminho_2","caminho_3","caminho_4"].forEach((nome) => {
         const piso = objeto.getObjectByName(nome);
-
-        if (piso && piso.material) {
-          piso.geometry.computeBoundingBox();
-          const box = piso.geometry.boundingBox;
-          const largura = box.max.x - box.min.x;
-          const comprimento = box.max.y - box.min.y;
-
-          const espessuraPlaca = 0.2;
-
-          const raioBorda = 0.6;
-          const geometriaArredondada = new RoundedBoxGeometry(
-            largura,
-            comprimento,
-            espessuraPlaca,
-            4,
-            raioBorda,
-          );
-          piso.geometry.dispose();
-          piso.geometry = geometriaArredondada;
-
-          piso.material.needsUpdate = true;
-        }
-      });
-      // MELHORANDO O PISO E PREDIOS
-      const nomePisosePredios = [
-        "plataform_start",
-        "caminho_2",
-        "caminho_1",
-        "caminho_3",
-        "caminho_4",
-        "platform_1",
-        "platform_3",
-        "platform_4",
-      ];
-
-      nomePisosePredios.forEach((nome) => {
-        const pisoPredio = objeto.getObjectByName(nome);
-
-        if (pisoPredio && pisoPredio.material) {
-          pisoPredio.material.normalMap = texturaPiso;
-          pisoPredio.material.normalScale.set(0.5, 0.5);
-
-          pisoPredio.material.color.setHex(0xf4fbff);
-
-          pisoPredio.material.roughness = 0.09;
-          pisoPredio.material.metalness = 0.1;
-          pisoPredio.material.clearcoat = 1.0;
-          pisoPredio.material.clearcoatRoughness = 0.0;
-          pisoPredio.material.envMapIntensity = 0.7;
-          pisoPredio.material.needsUpdate = true;
-        }
+        if (!piso?.material) return;
+        piso.geometry.computeBoundingBox();
+        const box = piso.geometry.boundingBox;
+        piso.geometry.dispose();
+        piso.geometry = new RoundedBoxGeometry(
+          box.max.x - box.min.x, box.max.y - box.min.y, 0.2, 4, 0.6
+        );
+        piso.material.needsUpdate = true;
       });
 
-      // MELHORANDO A BOLHA DE ÁGUA
-      const nomesBolhas = ["bolha_flutuante", "plataform_2", "topo_predio_4"];
-
-      nomesBolhas.forEach((nome) => {
-        const painel = objeto.getObjectByName(nome);
-        if (painel && painel.material) {
-          painel.material.normalMap = texturaGotasNormal; // Aplica o relevo das gotas
-          painel.material.normalScale.set(0.5, 0.5);
-          painel.material.color.setHex(0xd4f0ff);
-          painel.material.transmission = 0.85;
-          painel.material.opacity = 1.0;
-          painel.material.iridescence = 0.7;
-          painel.material.iridescenceIOR = 1.3;
-          painel.material.iridescenceThicknessRange = [100, 400];
-          painel.material.roughness = 0.0;
-          painel.material.clearcoat = 1.0;
-          painel.material.clearcoatRoughness = 0.0;
-          painel.material.ior = 1.5;
-        }
+      ["plataform_start","caminho_2","caminho_1","caminho_3","caminho_4",
+       "platform_1","platform_3","platform_4"].forEach((nome) => {
+        const m = objeto.getObjectByName(nome)?.material;
+        if (!m) return;
+        Object.assign(m, {
+          normalMap: texturaPiso, roughness: 0.09, metalness: 0.1,
+          clearcoat: 1.0, clearcoatRoughness: 0.0, envMapIntensity: 0.7,
+        });
+        m.normalScale.set(0.5, 0.5);
+        m.color.setHex(0xf4fbff);
+        m.needsUpdate = true;
       });
 
-      // MELHORANDO OS PAINÉIS PRATEADOS (verificar se ainda serão utilizados)
-      const nomesPainel = ["panel_1", "panel_2", "panel_3", "panel_4"];
+      ["bolha_flutuante","plataform_2","topo_predio_4"].forEach((nome) => {
+        const m = objeto.getObjectByName(nome)?.material;
+        if (!m) return;
+        Object.assign(m, {
+          normalMap: texturaGotasNormal, transmission: 0.85, opacity: 1.0,
+          iridescence: 0.7, iridescenceIOR: 1.3,
+          iridescenceThicknessRange: [100, 400],
+          roughness: 0.0, clearcoat: 1.0, clearcoatRoughness: 0.0, ior: 1.5,
+        });
+        m.normalScale.set(0.5, 0.5);
+        m.color.setHex(0xd4f0ff);
+      });
 
-      nomesPainel.forEach((nome) => {
-        const painel = objeto.getObjectByName(nome);
-        if (painel && painel.material) {
-          painel.material.normalMap = texturaMetalEscovado;
-          painel.material.normalScale.set(0.2, 0.2);
-        }
+      ["panel_1","panel_2","panel_3","panel_4"].forEach((nome) => {
+        const m = objeto.getObjectByName(nome)?.material;
+        if (!m) return;
+        m.normalMap = texturaMetalEscovado;
+        m.normalScale.set(0.2, 0.2);
       });
 
       scene.add(objeto);
     });
 
-
-
-  // GLB
-  //new GLTFLoader().load("/campus_nofloor.glb", (gltf) => scene.add(gltf.scene));
-
   // Composer / Bloom
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.1,
-    0.2,
-    0.4,
-  );
-  composer.addPass(bloomPass);
-  const clock = new THREE.Clock();
+  composer.addPass(new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight), 0.1, 0.2, 0.4
+  ));
 
-  function animate() {
-    requestAnimationFrame(animate);
+  let waterElapsed = 0;
+  let waterPrevTime = performance.now();
 
-    const elapsed = clock.getElapsedTime();
-    water.material.uniforms["time"].value = elapsed * 0.4;
-
-    composer.render();
+  function tickWater(timestamp) {
+    const now = timestamp ?? performance.now();
+    waterElapsed += Math.min((now - waterPrevTime) / 1000, 0.1);
+    waterPrevTime = now;
+    water.material.uniforms["time"].value = waterElapsed * 0.4;
   }
 
-  animate();
-
-  return { scene, camera, renderer, composer, ground };
+  // Retorna tickWater para o PlayerControls chamar a cada frame
+  return { scene, camera, renderer, composer, ground, tickWater };
 }
