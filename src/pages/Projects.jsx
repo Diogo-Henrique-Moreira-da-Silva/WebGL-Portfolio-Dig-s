@@ -63,7 +63,8 @@ export function Projects() {
         <div className="row g-3 flex-grow-1">
           {projects.map((project, i) => (
             <div key={i} className="col-4 d-flex">
-              <div
+              <button
+                type="button"
                 className="d-flex flex-column gap-2 p-3 w-100 h-100"
                 style={{ ...aero.card, transition: "transform 0.15s, box-shadow 0.15s" }}
                 onMouseEnter={e => {
@@ -100,7 +101,7 @@ export function Projects() {
                   style={{ fontSize: "11px", color: "#0d5c96" }}>
                   <LiaGithub size={14} /> Ver repositório <FiExternalLink size={10} />
                 </a>
-              </div>
+              </button>
             </div>
           ))}
         </div>

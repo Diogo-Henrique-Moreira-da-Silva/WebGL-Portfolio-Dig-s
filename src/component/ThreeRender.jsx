@@ -28,13 +28,13 @@ export function createScene(canvas) {
   const sun = new THREE.DirectionalLight(0xffffff, 1.0);
   sun.position.set(300, 500, 200);
   sun.castShadow = true;
-  sun.shadow.mapSize.width  = 4096;
+  sun.shadow.mapSize.width = 4096;
   sun.shadow.mapSize.height = 4096;
-  sun.shadow.camera.near   = 1;
-  sun.shadow.camera.far    = 1000;
-  sun.shadow.camera.left   = -150;
-  sun.shadow.camera.right  = 150;
-  sun.shadow.camera.top    = 150;
+  sun.shadow.camera.near = 1;
+  sun.shadow.camera.far = 1000;
+  sun.shadow.camera.left = -150;
+  sun.shadow.camera.right = 150;
+  sun.shadow.camera.top = 150;
   sun.shadow.camera.bottom = -150;
   const ambient = new THREE.AmbientLight(0xffffff, 0.3);
   scene.add(sun, ambient);
@@ -58,9 +58,9 @@ export function createScene(canvas) {
 
   // Terreno
   const loader = new THREE.TextureLoader();
-  const albedo    = loader.load("/texture/grass__Png_albedo.png");
+  const albedo = loader.load("/texture/grass__Png_albedo.png");
   const normalMap = loader.load("/texture/grass__Png_normal.png");
-  const aoMap     = loader.load("/texture/grass__Png_ao.png");
+  const aoMap = loader.load("/texture/grass__Png_ao.png");
   const heightMap = loader.load("/texture/grass__Png_height.png");
 
   [albedo, normalMap, aoMap, heightMap].forEach((tex) => {
@@ -78,9 +78,9 @@ export function createScene(canvas) {
   const pos = geometry.attributes.position;
 
   // Área plana no centro (onde o jogador fica)
-  const FLAT_RADIUS  = 60;   // raio da área completamente plana
-  const BLEND_START  = 50;   // onde começa a subir
-  const BLEND_END    = 350;  // onde atinge altura máxima
+  const FLAT_RADIUS = 60;   // raio da área completamente plana
+  const BLEND_START = 50;   // onde começa a subir
+  const BLEND_END = 350;  // onde atinge altura máxima
 
   const VALLEY_FLOOR = -1.5;
 
@@ -95,12 +95,12 @@ export function createScene(canvas) {
     }
 
     // Blend suave do centro para as bordas
-    const t     = Math.min((dist - BLEND_START) / (BLEND_END - BLEND_START), 1.0);
+    const t = Math.min((dist - BLEND_START) / (BLEND_END - BLEND_START), 1.0);
     const blend = t * t * (3 - 2 * t);
 
     // Colinas principais, cristas longas e assimétricas
-    const hill1 = Math.sin(x * 0.009 + 0.3)  * Math.cos(z * 0.007 - 0.8) * 18;
-    const hill2 = Math.sin(x * 0.006 - 1.2)  * Math.cos(z * 0.011 + 0.5) * 14;
+    const hill1 = Math.sin(x * 0.009 + 0.3) * Math.cos(z * 0.007 - 0.8) * 18;
+    const hill2 = Math.sin(x * 0.006 - 1.2) * Math.cos(z * 0.011 + 0.5) * 14;
     const hill3 = Math.sin((x + z) * 0.005 + 0.9) * 10;
 
     // Detalhe médio, ondulações que criam os vales entre as colinas
@@ -161,13 +161,13 @@ export function createScene(canvas) {
   water.rotation.x = -Math.PI / 2;
   water.position.y = 0.12;
 
-  water.material.transparent  = true;
-  water.material.opacity      = 0.78;   // deixa ver o fundo
-  water.material.depthWrite   = false;  // evita artefatos de profundidade com o terreno
-  water.material.blending     = THREE.NormalBlending;
+  water.material.transparent = true;
+  water.material.opacity = 0.78;   // deixa ver o fundo
+  water.material.depthWrite = false;  // evita artefatos de profundidade com o terreno
+  water.material.blending = THREE.NormalBlending;
 
   // Uniforms do shader Water.js
-  water.material.uniforms["size"].value           = 6.0;   // escala das ondas normais (maior = ondas menores/mais detalhadas)
+  water.material.uniforms["size"].value = 6.0;   // escala das ondas normais (maior = ondas menores/mais detalhadas)
   water.material.uniforms["distortionScale"].value = 0.4;  // amplitude da distorção da refração
   water.material.uniforms["alpha"].value = 0.77;
   scene.add(water);
@@ -183,11 +183,11 @@ export function createScene(canvas) {
 
   // Texturas extras
   const textureLoader = new THREE.TextureLoader();
-  const texturaGotasNormal  = textureLoader.load("/texture/water_drops_normal.png");
-  const texturaPiso         = textureLoader.load("/texture/shiny_marble.png");
+  const texturaGotasNormal = textureLoader.load("/texture/water_drops_normal.png");
+  const texturaPiso = textureLoader.load("/texture/shiny_marble.png");
   const texturaMetalEscovado = textureLoader.load("/texture/brushed_metal_normal.jpg");
 
-  texturaGotasNormal.colorSpace   = THREE.NoColorSpace;
+  texturaGotasNormal.colorSpace = THREE.NoColorSpace;
   texturaMetalEscovado.colorSpace = THREE.NoColorSpace;
   texturaGotasNormal.wrapS = texturaGotasNormal.wrapT = THREE.RepeatWrapping;
   texturaGotasNormal.repeat.set(32, 32);
@@ -200,7 +200,7 @@ export function createScene(canvas) {
     .then((json) => {
       const objeto = new THREE.ObjectLoader().parse(json.scene);
 
-      ["caminho_1","caminho_2","caminho_3","caminho_4"].forEach((nome) => {
+      ["caminho_1"].forEach((nome) => {
         const piso = objeto.getObjectByName(nome);
         if (!piso?.material) return;
         piso.geometry.computeBoundingBox();
@@ -212,8 +212,7 @@ export function createScene(canvas) {
         piso.material.needsUpdate = true;
       });
 
-      ["plataform_start","caminho_2","caminho_1","caminho_3","caminho_4",
-       "platform_1","platform_3","platform_4"].forEach((nome) => {
+      ["plataform_start", "caminho_1", "platform_1", "platform_3", "platform_4", "base_portfolio"].forEach((nome) => {
         const m = objeto.getObjectByName(nome)?.material;
         if (!m) return;
         Object.assign(m, {
@@ -225,7 +224,7 @@ export function createScene(canvas) {
         m.needsUpdate = true;
       });
 
-      ["bolha_flutuante","plataform_2","topo_predio_4"].forEach((nome) => {
+      ["bolha_flutuante_1","bolha_flutuante_2","bolha_flutuante_3","bolha_flutuante_4", "bolha_centro", "plataform_2", "topo_predio_4"].forEach((nome) => {
         const m = objeto.getObjectByName(nome)?.material;
         if (!m) return;
         Object.assign(m, {
@@ -236,13 +235,6 @@ export function createScene(canvas) {
         });
         m.normalScale.set(0.5, 0.5);
         m.color.setHex(0xd4f0ff);
-      });
-
-      ["panel_1","panel_2","panel_3","panel_4"].forEach((nome) => {
-        const m = objeto.getObjectByName(nome)?.material;
-        if (!m) return;
-        m.normalMap = texturaMetalEscovado;
-        m.normalScale.set(0.2, 0.2);
       });
 
       scene.add(objeto);

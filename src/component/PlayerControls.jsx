@@ -28,27 +28,41 @@ function ScreenOverlay({ wrapperEl, isHovered, isSelected, mode }) {
         )}
       </div>
 
-      <div style={{
-        position: "absolute", bottom: 24, left: "50%",
-        transform: "translateX(-50%)",
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "10px 20px",
-        background: "rgba(10,30,60,0.72)",
-        border: "1.5px solid rgba(100,200,255,0.45)",
-        borderRadius: 999, backdropFilter: "blur(12px)",
-        boxShadow: "0 4px 24px rgba(60,160,255,0.18), inset 0 1px 0 rgba(255,255,255,0.10)",
-        pointerEvents: "none", zIndex: 9999,
-        opacity: isHovered ? 1 : 0, transition: "opacity 0.35s ease",
-        whiteSpace: "nowrap",
-      }}>
-        <span style={{
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          width: 26, height: 26, borderRadius: 7,
-          background: "rgba(100,200,255,0.18)", border: "1.5px solid rgba(100,200,255,0.55)",
-          fontSize: 12, fontWeight: 700, color: "#7dd3fc",
-          boxShadow: "0 0 10px rgba(100,200,255,0.25)",
-        }}>F</span>
-        <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(220,240,255,0.90)" }}>
+      <div
+        className={`position-absolute start-50 translate-middle-x d-flex align-items-center gap-2 px-3 py-2 rounded-pill border text-nowrap ${isHovered ? "opacity-100" : "opacity-0"
+          }`}
+        style={{
+          bottom: 24,
+          borderColor: "rgb(88, 220, 253)",
+          backdropFilter: "blur(14px)",
+          background:
+            "linear-gradient(180deg, rgba(160,220,255,0.18), rgba(90,180,255,0.08))",
+          boxShadow:
+            "0 6px 30px rgba(60,193,255,0.25), inset 0 1px 0 rgba(255,255,255,0.25)",
+          pointerEvents: "none",
+          zIndex: 9999,
+          transition: "opacity .35s ease",
+        }}
+      >
+        <span
+          className="d-inline-flex align-items-center justify-content-center fw-bold"
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: 8,
+            fontSize: 12,
+            color: "#ffffff",
+            background:
+              "linear-gradient(180deg, rgba(139, 220, 250, 0.35), rgba(92, 184, 255, 0.18))",
+            border: "1.5px solid rgba(120,220,255,0.65)",
+            boxShadow:
+              "0 0 14px rgba(159, 228, 253, 0.58), inset 0 1px 2px rgba(255, 255, 255, 0.91)",
+          }}
+        >
+          F
+        </span>
+
+        <span className="fw-semibold small text-info">
           Pressione para visualizar
         </span>
       </div>
@@ -131,7 +145,7 @@ export function setupPlayerControls({
   // Mouse look manual
   // Yaw = rotação horizontal (em torno de Y global)
   // Pitch = rotação vertical (limitada a ±89°)
-  let yaw   = 0;  // radianos
+  let yaw = 0;  // radianos
   let pitch = 0;
   let isLocked = false;
 
@@ -139,7 +153,7 @@ export function setupPlayerControls({
   // para não dar salto ao ativar o look
   {
     const euler = new THREE.Euler().setFromQuaternion(camera.quaternion, "YXZ");
-    yaw   = euler.y;
+    yaw = euler.y;
     pitch = euler.x;
   }
 
@@ -156,9 +170,9 @@ export function setupPlayerControls({
 
   const onMouseMove = (e) => {
     if (!isLocked) return;
-    yaw   -= e.movementX * SENSITIVITY;
+    yaw -= e.movementX * SENSITIVITY;
     pitch -= e.movementY * SENSITIVITY;
-    pitch  = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, pitch));
+    pitch = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, pitch));
     applyLook();
   };
 
@@ -173,17 +187,17 @@ export function setupPlayerControls({
   };
 
   renderer.domElement.addEventListener("mousemove", onMouseMove);
-  renderer.domElement.addEventListener("click",     requestLock);
-  document.addEventListener("pointerlockchange",    onPointerLockChange);
+  renderer.domElement.addEventListener("click", requestLock);
+  document.addEventListener("pointerlockchange", onPointerLockChange);
 
   // Estado
-  const keys    = new Set();
-  let ui2dOpen  = false;
+  const keys = new Set();
+  let ui2dOpen = false;
   let ui2dForced = false;
   let autoBlocked = false;
-  let hoveredIndex  = -1;
+  let hoveredIndex = -1;
   let selectedIndex = 0;
-  let editMode  = false;
+  let editMode = false;
 
   // Abrir / fechar painel 2D 
   function open2DFor(index) {
@@ -195,7 +209,7 @@ export function setupPlayerControls({
   }
 
   function close2D(manual = true) {
-    ui2dOpen   = false;
+    ui2dOpen = false;
     ui2dForced = false;
     renderer.domElement.style.pointerEvents = "auto";
     onClose2D?.();
@@ -206,7 +220,7 @@ export function setupPlayerControls({
 
   // Hover
   const HOVER_DIST = 12.0;
-  const HOVER_DOT  = 0.92;
+  const HOVER_DOT = 0.92;
 
   function getHoveredIndex() {
     if (ui2dOpen) return -1;
@@ -226,7 +240,7 @@ export function setupPlayerControls({
   function applyHoverVisual(index) {
     screens.forEach((scr, i) => {
       const on = i === index;
-      scr.el.style.outline   = on ? "2.5px solid rgba(120,210,255,0.90)" : "none";
+      scr.el.style.outline = on ? "2.5px solid rgba(120,210,255,0.90)" : "none";
       scr.el.style.boxShadow = on
         ? "0 0 0 4px rgba(80,190,255,0.18), 0 0 40px rgba(80,190,255,0.22)" : "none";
     });
@@ -253,20 +267,28 @@ export function setupPlayerControls({
 
   // Teclado
   const preventKeys = new Set([
-    "ArrowUp","ArrowDown","ArrowLeft","ArrowRight",
-    "PageUp","PageDown","Space","ShiftLeft","ShiftRight",
+    "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+    "PageUp", "PageDown", "Space", "ShiftLeft", "ShiftRight",
   ]);
 
+  // Retorna true se o foco atual está num campo de texto editável.
+  // Nesse caso, todos os atalhos de teclado devem ser ignorados para
+  // não engolir caracteres digitados pelo usuário.
+  function isTypingInField() {
+    const el = document.activeElement;
+    if (!el) return false;
+    const tag = el.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (el.isContentEditable) return true;
+    return false;
+  }
+
   const onKeyDown = (e) => {
+    // Se o usuário está digitando num campo de texto, não intercepta nada
+    if (isTypingInField()) return;
+
     if (e.code === "Escape" && !e.repeat && ui2dOpen) {
       e.preventDefault(); close2D(); return;
-    }
-    if (e.ctrlKey && e.code === "KeyS" && !e.repeat) {
-      e.preventDefault(); downloadJsonFile("layout.json", serializeLayout(screens)); return;
-    }
-    if (e.ctrlKey && e.code === "KeyO" && !e.repeat) {
-      e.preventDefault();
-      openJsonFilePicker((json) => { applyLayout(screens, json); refreshSelection(); }); return;
     }
     if (e.code === "KeyT" && !e.repeat) {
       editMode = !editMode;
@@ -299,28 +321,23 @@ export function setupPlayerControls({
 
   const onKeyUp = (e) => keys.delete(e.code);
   window.addEventListener("keydown", onKeyDown, { capture: true });
-  window.addEventListener("keyup",   onKeyUp,   { capture: true });
+  window.addEventListener("keyup", onKeyUp, { capture: true });
 
-  // Layout persistido
-  (async () => {
-    try { applyLayout(screens, await fetchLayout("/config/layout.json")); }
-    catch { /* opcional */ }
-  })();
 
   // Loop de animação
-  let bobTime  = 0;
-  let rafId    = 0;
+  let bobTime = 0;
+  let rafId = 0;
   let prevTime = performance.now();
 
   // Vetores reutilizáveis:  evita alocação por frame
-  const _fwd   = new THREE.Vector3();
+  const _fwd = new THREE.Vector3();
   const _right = new THREE.Vector3();
-  const _up    = new THREE.Vector3(0, 1, 0);
+  const _up = new THREE.Vector3(0, 1, 0);
 
   const animate = (timestamp) => {
     rafId = requestAnimationFrame(animate);
 
-    const now   = timestamp ?? performance.now();
+    const now = timestamp ?? performance.now();
     const delta = Math.min((now - prevTime) / 1000, 0.1);
     prevTime = now;
 
@@ -334,7 +351,7 @@ export function setupPlayerControls({
       if (autoBlocked) { if (nearIdx < 0) autoBlocked = false; }
       else {
         if (nearIdx >= 0) { if (!ui2dOpen) open2DFor(nearIdx); }
-        else              { if (ui2dOpen)  close2D(false); }
+        else { if (ui2dOpen) close2D(false); }
       }
     }
 
@@ -347,7 +364,7 @@ export function setupPlayerControls({
     // WASD + Sprint, move na direção que a câmera está apontando (sem componente Y)
     if (!editMode && !ui2dOpen && isLocked) {
       const sprint = keys.has("ShiftLeft") || keys.has("ShiftRight");
-      const speed  = sprint ? 12 : 5;
+      const speed = sprint ? 12 : 5;
       const fwdAmt = (keys.has("KeyW") ? 1 : 0) - (keys.has("KeyS") ? 1 : 0);
       const strAmt = (keys.has("KeyD") ? 1 : 0) - (keys.has("KeyA") ? 1 : 0);
 
@@ -360,8 +377,8 @@ export function setupPlayerControls({
         // Direção right perpendicular no plano
         _right.crossVectors(_fwd, _up).normalize();
 
-        camera.position.addScaledVector(_fwd,   fwdAmt * speed * delta);
-        camera.position.addScaledVector(_right,  strAmt * speed * delta);
+        camera.position.addScaledVector(_fwd, fwdAmt * speed * delta);
+        camera.position.addScaledVector(_right, strAmt * speed * delta);
 
         // Altura fixa, displacementMap impede raycaster de funcionar corretamente
         camera.position.y = 1.7 + Math.sin(bobTime) * (sprint ? 0.07 : 0.04);
@@ -374,17 +391,17 @@ export function setupPlayerControls({
     // Modo EDITAR
     if (editMode && selected) {
       const mv = 6 * delta, rot = 1.8 * delta, sc = 0.6 * delta;
-      if (keys.has("ArrowLeft"))  selected.position.x -= mv;
+      if (keys.has("ArrowLeft")) selected.position.x -= mv;
       if (keys.has("ArrowRight")) selected.position.x += mv;
-      if (keys.has("ArrowUp"))    selected.position.z -= mv;
-      if (keys.has("ArrowDown"))  selected.position.z += mv;
-      if (keys.has("PageUp"))     selected.position.y += mv;
-      if (keys.has("PageDown"))   selected.position.y -= mv;
-      if (keys.has("KeyQ"))       selected.rotation.y += rot;
-      if (keys.has("KeyE"))       selected.rotation.y -= rot;
-      if (keys.has("Equal")    || keys.has("NumpadAdd"))
+      if (keys.has("ArrowUp")) selected.position.z -= mv;
+      if (keys.has("ArrowDown")) selected.position.z += mv;
+      if (keys.has("PageUp")) selected.position.y += mv;
+      if (keys.has("PageDown")) selected.position.y -= mv;
+      if (keys.has("KeyQ")) selected.rotation.y += rot;
+      if (keys.has("KeyE")) selected.rotation.y -= rot;
+      if (keys.has("Equal") || keys.has("NumpadAdd"))
         selected.scale.setScalar(selected.scale.x + sc);
-      if (keys.has("Minus")    || keys.has("NumpadSubtract"))
+      if (keys.has("Minus") || keys.has("NumpadSubtract"))
         selected.scale.setScalar(Math.max(0.001, selected.scale.x - sc));
     }
 
@@ -401,11 +418,11 @@ export function setupPlayerControls({
   return () => {
     cancelAnimationFrame(rafId);
     renderer.domElement.removeEventListener("mousemove", onMouseMove);
-    renderer.domElement.removeEventListener("click",     requestLock);
-    document.removeEventListener("pointerlockchange",    onPointerLockChange);
+    renderer.domElement.removeEventListener("click", requestLock);
+    document.removeEventListener("pointerlockchange", onPointerLockChange);
     window.removeEventListener("keydown", onKeyDown, { capture: true });
-    window.removeEventListener("keyup",   onKeyUp,   { capture: true });
-    window.removeEventListener("resize",  onResize);
+    window.removeEventListener("keyup", onKeyUp, { capture: true });
+    window.removeEventListener("resize", onResize);
     delete window.__portfolioClose2D;
     if (isLocked) document.exitPointerLock();
     screens.forEach((scr) => scene.remove(scr.obj));
@@ -415,51 +432,5 @@ export function setupPlayerControls({
 }
 
 
-// Layout helpers
-function serializeLayout(screens) {
-  const out = {};
-  screens.forEach(({ id, obj }) => {
-    out[id] = {
-      position: { x: obj.position.x, y: obj.position.y, z: obj.position.z },
-      rotation: { x: obj.rotation.x, y: obj.rotation.y, z: obj.rotation.z },
-      scale: obj.scale.x,
-    };
-  });
-  return out;
-}
 
-function applyLayout(screens, layout) {
-  screens.forEach((scr) => {
-    const d = layout?.[scr.id];
-    if (!d) return;
-    scr.obj.position.set(d.position.x, d.position.y, d.position.z);
-    scr.obj.rotation.set(d.rotation.x, d.rotation.y, d.rotation.z);
-    scr.obj.scale.setScalar(d.scale ?? scr.obj.scale.x);
-  });
-}
 
-function downloadJsonFile(filename, data) {
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
-  );
-  const a = Object.assign(document.createElement("a"), { href: url, download: filename });
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-}
-
-async function fetchLayout(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`layout fetch: ${res.status}`);
-  return res.json();
-}
-
-function openJsonFilePicker(onJson) {
-  const input = Object.assign(document.createElement("input"), {
-    type: "file", accept: "application/json",
-  });
-  input.addEventListener("change", async () => {
-    const file = input.files?.[0];
-    if (!file) return;
-    onJson?.(JSON.parse(await file.text()));
-  });
-  input.click();
-}

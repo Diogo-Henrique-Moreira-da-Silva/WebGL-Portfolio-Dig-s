@@ -9,33 +9,34 @@ import { Projects } from "../pages/Projects";
 import { Experience } from "../pages/Experience";
 import { Contact } from "../pages/Contact";
 
+//Posição das telas flutuantes em CSS3D
 const SCREEN_CONFIGS = [
   {
     id: "tela1", title: "Sobre",
     component: About,
-    position: new THREE.Vector3(-8, 2.2, 0),
+    position: new THREE.Vector3(-23, 3, 0),
     rotationY: Math.PI / 2,
     scale: 0.01,
   },
   {
     id: "tela2", title: "Projetos",
     component: Projects,
-    position: new THREE.Vector3(0, 2.2, -8),
-    rotationY: 0,
+    position: new THREE.Vector3(-30, 3, -7),
+    rotationY: Math.PI,
     scale: 0.01,
   },
   {
     id: "tela3", title: "Experiências",
     component: Experience,
-    position: new THREE.Vector3(8, 2.2, 0),
+    position: new THREE.Vector3(-37, 3, 0),
     rotationY: -Math.PI / 2,
     scale: 0.01,
   },
   {
     id: "tela4", title: "Contato",
     component: Contact,
-    position: new THREE.Vector3(0, 2.2, 8),
-    rotationY: Math.PI,
+    position: new THREE.Vector3(-30, 3, 7),
+    rotationY: 0,
     scale: 0.01,
   },
 ];

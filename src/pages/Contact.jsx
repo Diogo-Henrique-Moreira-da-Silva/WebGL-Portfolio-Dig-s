@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
 // Configuração EmailJS
-const EMAILJS_SERVICE_ID = "service_4vpy0th";
-const EMAILJS_TEMPLATE_ID = "template_w0qe1m1";
-const EMAILJS_PUBLIC_KEY = "WWW5wDL545Iupiq_A";
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 
 const aero = {
@@ -35,10 +35,6 @@ const aero = {
     width: "100%",
     fontSize: "13px",
     padding: "10px 14px",
-  },
-  inputFocus: {
-    border: "1.5px solid rgba(56,189,248,0.70)",
-    boxShadow: "0 0 0 3px rgba(56,189,248,0.15), inset 0 1px 0 rgba(255,255,255,0.7)",
   },
   submitBtn: {
     background: "linear-gradient(135deg, rgba(56,189,248,0.80) 0%, rgba(14,165,233,0.90) 100%)",
@@ -85,7 +81,6 @@ export function Contact() {
   const contact = t('contact', { returnObjects: true }) || {};
 
   const [form, setForm] = useState(INITIAL);
-  const [focused, setFocused] = useState(null);
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
@@ -112,11 +107,6 @@ export function Contact() {
       setStatus("error");
     }
   };
-
-  const inputStyle = name => ({
-    ...aero.input,
-    ...(focused === name ? aero.inputFocus : {}),
-  });
 
   const isDisabled = status === "sending" || !form.name || !form.email || !form.message;
 
@@ -155,22 +145,25 @@ export function Contact() {
               <label htmlFor="name" style={aero.label}>Nome</label>
               <input
                 id="name"
-                name="name" value={form.name} placeholder="Seu nome"
+                name="name"
+                value={form.name}
+                placeholder="Seu nome"
                 onChange={handleChange}
-                onFocus={() => setFocused("name")}
-                onBlur={() => setFocused(null)}
-                style={inputStyle("name")}
+                className="aero-input"
+                style={aero.input}
               />
             </div>
             <div className="col-6">
               <label htmlFor="email" style={aero.label}>Email</label>
               <input
                 id="email"
-                name="email" type="email" value={form.email} placeholder="seu@email.com"
+                name="email"
+                type="email"
+                value={form.email}
+                placeholder="seu@email.com"
                 onChange={handleChange}
-                onFocus={() => setFocused("email")}
-                onBlur={() => setFocused(null)}
-                style={inputStyle("email")}
+                className="aero-input"
+                style={aero.input}
               />
             </div>
           </div>
@@ -180,11 +173,12 @@ export function Contact() {
             <label htmlFor="subject" style={aero.label}>Assunto</label>
             <input
               id="subject"
-              name="subject" value={form.subject} placeholder="Sobre o que você quer falar?"
+              name="subject"
+              value={form.subject}
+              placeholder="Sobre o que você quer falar?"
               onChange={handleChange}
-              onFocus={() => setFocused("subject")}
-              onBlur={() => setFocused(null)}
-              style={inputStyle("subject")}
+              className="aero-input"
+              style={aero.input}
             />
           </div>
 
@@ -193,11 +187,12 @@ export function Contact() {
             <label htmlFor="message" style={aero.label}>Mensagem</label>
             <textarea
               id="message"
-              name="message" value={form.message} placeholder="Escreva sua mensagem..."
+              name="message"
+              value={form.message}
+              placeholder="Escreva sua mensagem..."
               onChange={handleChange}
-              onFocus={() => setFocused("message")}
-              onBlur={() => setFocused(null)}
-              style={{ ...inputStyle("message"), resize: "none", flex: 1, minHeight: "80px" }}
+              className="aero-input"
+              style={{ ...aero.input, resize: "none", flex: 1, minHeight: "80px" }}
             />
           </div>
 
@@ -281,6 +276,10 @@ export function Contact() {
           50%       { opacity: 0.45; box-shadow: 0 0 3px #22c55e; }
         }
         ::placeholder { color: rgba(26,111,168,0.45); }
+        .aero-input:focus {
+          border-color: rgba(56,189,248,0.70) !important;
+          box-shadow: 0 0 0 3px rgba(56,189,248,0.15), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+        }
       `}</style>
     </section>
   );

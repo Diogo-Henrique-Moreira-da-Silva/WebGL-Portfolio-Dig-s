@@ -31,14 +31,13 @@ O portfólio segue um conceito criativo inspirado em:
 🟢 Layout imersivo utilizando WebGl
 
 A proposta é criar uma experiência diferenciada e memorável para o visitante.
-
+Versão em português e inglês
 ---
 
 ## Estrutura do Site
 
 ### 📁 Sobre Mim
 - Apresentação pessoal
-- Versão em português e inglês
 - Objetivos profissionais
 
 ---
@@ -91,6 +90,76 @@ A proposta é criar uma experiência diferenciada e memorável para o visitante.
 </p>
 
 ---
+
+## Instruções
+
+### 1. Configurar o conteúdo do portfólio
+
+Edite os arquivos de tradução para adicionar suas informações nas duas versões do site:
+
+- Inglês: `/src/locales/en-portfolio.json`
+- Português: `/src/locales/pt-portfolio.json`
+
+Esses arquivos controlam todo o conteúdo exibido no portfólio (textos, projetos, descrição, etc.).
+
+---
+
+### 2. Configurar envio de e-mail
+
+O formulário de contato utiliza o serviço EmailJS para enviar mensagens diretamente do site.
+
+1. Crie uma conta em https://www.emailjs.com/
+2. Conecte seu e-mail dentro da plataforma.
+3. Crie:
+   - um **Service**
+   - um **Email Template**
+4. Copie os dados fornecidos pelo painel do EmailJS:
+   - **Service ID**
+   - **Template ID**
+   - **Public Key**
+
+---
+
+### 3. Criar o arquivo `.env`
+
+Na raiz do projeto, crie um arquivo `.env` baseado no arquivo de exemplo `.env.example`
+
+### 4. Rodar o projeto
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Inicie o servidor de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+O projeto ficará disponível normalmente em:
+
+```
+http://localhost:5173
+```
+
+### 5. Gerar build de produção
+
+Para gerar a versão otimizada do site para produção, execute:
+
+```bash
+npm run build
+```
+
+Os arquivos finais serão gerados na pasta:
+
+```
+/dist
+```
+
+Essa pasta contém os arquivos estáticos prontos para serem hospedados em qualquer serviço de deploy (como servidores web ou plataformas de hospedagem).
+
 
 ## 🎮 Controles
 ### Movimentação
