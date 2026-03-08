@@ -169,7 +169,7 @@ export function createScene(canvas) {
   // Uniforms do shader Water.js
   water.material.uniforms["size"].value           = 6.0;   // escala das ondas normais (maior = ondas menores/mais detalhadas)
   water.material.uniforms["distortionScale"].value = 0.4;  // amplitude da distorção da refração
-  water.material.uniforms["alpha"].value  
+  water.material.uniforms["alpha"].value = 0.77;
   scene.add(water);
 
   const borderGeo = new THREE.RingGeometry(260, 280, 128);
