@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
 // Configuração EmailJS
-const EMAILJS_SERVICE_ID  = "service_4vpy0th";   
-const EMAILJS_TEMPLATE_ID = "template_w0qe1m1";  
-const EMAILJS_PUBLIC_KEY  = "WWW5wDL545Iupiq_A";   
+const EMAILJS_SERVICE_ID = "service_4vpy0th";
+const EMAILJS_TEMPLATE_ID = "template_w0qe1m1";
+const EMAILJS_PUBLIC_KEY = "WWW5wDL545Iupiq_A";
 
 
 const aero = {
@@ -84,9 +84,9 @@ export function Contact() {
   const { t } = useTranslation('portfolio');
   const contact = t('contact', { returnObjects: true }) || {};
 
-  const [form,    setForm]    = useState(INITIAL);
+  const [form, setForm] = useState(INITIAL);
   const [focused, setFocused] = useState(null);
-  const [status,  setStatus]  = useState("idle"); // idle | sending | success | error
+  const [status, setStatus] = useState("idle"); // idle | sending | success | error
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -98,11 +98,11 @@ export function Contact() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name:  form.name,
+          from_name: form.name,
           from_email: form.email,
-          subject:    form.subject,
-          message:    form.message,
-          to_email:   contact.email,
+          subject: form.subject,
+          message: form.message,
+          to_email: contact.email,
         },
         EMAILJS_PUBLIC_KEY
       );
@@ -152,8 +152,9 @@ export function Contact() {
           {/* Nome + Email lado a lado */}
           <div className="row g-2">
             <div className="col-6">
-              <label style={aero.label}>Nome</label>
+              <label htmlFor="name" style={aero.label}>Nome</label>
               <input
+                id="name"
                 name="name" value={form.name} placeholder="Seu nome"
                 onChange={handleChange}
                 onFocus={() => setFocused("name")}
@@ -162,8 +163,9 @@ export function Contact() {
               />
             </div>
             <div className="col-6">
-              <label style={aero.label}>Email</label>
+              <label htmlFor="email" style={aero.label}>Email</label>
               <input
+                id="email"
                 name="email" type="email" value={form.email} placeholder="seu@email.com"
                 onChange={handleChange}
                 onFocus={() => setFocused("email")}
@@ -175,8 +177,9 @@ export function Contact() {
 
           {/* Assunto */}
           <div>
-            <label style={aero.label}>Assunto</label>
+            <label htmlFor="subject" style={aero.label}>Assunto</label>
             <input
+              id="subject"
               name="subject" value={form.subject} placeholder="Sobre o que você quer falar?"
               onChange={handleChange}
               onFocus={() => setFocused("subject")}
@@ -187,8 +190,9 @@ export function Contact() {
 
           {/* Mensagem */}
           <div className="d-flex flex-column flex-grow-1">
-            <label style={aero.label}>Mensagem</label>
+            <label htmlFor="message" style={aero.label}>Mensagem</label>
             <textarea
+              id="message"
               name="message" value={form.message} placeholder="Escreva sua mensagem..."
               onChange={handleChange}
               onFocus={() => setFocused("message")}
