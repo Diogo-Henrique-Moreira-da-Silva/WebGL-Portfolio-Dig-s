@@ -1,56 +1,56 @@
 {
   "about": {
-    "name": "João Silva",
-    "role": "Software Engineer",
-    "bio": "Software Engineering student at PUC Minas",
+    "name": "Diogo Henrique Moreira da Silva",
+    "role": "Software Engineering Student",
+    "bio": "I am a Software Engineering student at PUC Minas with an interest in systems development, technology, and building digital solutions.",
     "photo": "/assets/pfp.png",
     "location": "Brazil",
-    "email": "joao@email.com",
-    "linkedin": "https://linkedin.com/in/joaotestefake",
-    "github": "https://github.com/joaosilva"
+    "email": "diogo.henrique.silva1704@gmail.com",
+    "linkedin": "https://linkedin.com/",
+    "github": "https://github.com/Diogo-Henrique-Moreira-da-Silva/"
   },
   "experience": {
     "jobs": [
       {
-        "company": "IT company",
-        "role": "Slavery Intern",
-        "period": "2001 - present",
-        "description": "Responsible for delivering hot coffee to supervisors."
+        "company": "Real Estate Company",
+        "role": "Administrative Assistant",
+        "period": "2023 - Present",
+        "description": "Administrative support in a real estate company, assisting with document organization, monitoring property-related processes, analyzing registry and property data, and supporting operational and strategic activities. Experience with data organization, support in negotiations, and management of information related to properties and development projects."
       }
     ],
     "education": [
       {
         "institution": "PUC Minas",
         "degree": "Software Engineering",
-        "period": "2023 - 2027",
-        "description": "Focus on..."
+        "period": "2023 - 2028",
+        "description": "Bachelor's degree in Software Engineering focused on systems development, programming, software architecture, and requirements engineering."
       }
     ]
   },
   "projects": [
     {
-      "title": "project 1",
-      "description": "Platform for logistics and real-time sensor monitoring.",
+      "title": "Booktrade",
+      "description": "Platform for buying, selling, and trading books. Static website.",
       "tags": ["IoT", "Docker", "GitHub Actions"],
-      "link": "https://github.com/"
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     },
     {
-      "title": "project 2",
-      "description": "E-commerce",
-      "tags": ["E-commerce", "Java", "SonarQube"],
-      "link": "https://github.com/j"
+      "title": "Gear Up",
+      "description": "The GearUp project aims to simplify the management of automotive services through an intuitive and efficient web platform. The application allows customers to register their vehicles, schedule services easily, and track the progress of their services in real time. Employees can also register services, view schedules, update service status, and save notes related to appointments.",
+      "tags": ["Java", "Spring Boot", "SonarQube"],
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2025-1-ti3-9577100-gearup"
     },
     {
-      "title": "project 3",
-      "description": "Sustainability mobile app",
-      "tags": ["Flutter", "Qodana", "CI/CD", "Android"],
-      "link": "https://github.com/"
+      "title": "Athenas Buffet",
+      "description": "Website for ordering and managing buffet services.",
+      "tags": ["Flutter", "Android", "CI/CD"],
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     }
   ],
   "contact": {
-    "message": "Open to opportunities in Backend, Frontend, and Software Engineering.",
-    "email": "joao@email.com",
-    "linkedin": "https://linkedin.com/in/joao",
-    "github": "https://github.com/joao"
+    "message": "Open to internship opportunities and projects in Backend, Frontend, and Software Engineering.",
+    "email": "diogo.henrique.silva1704@gmail.com",
+    "linkedin": "https://linkedin.com/",
+    "github": "https://github.com/Diogo-Henrique-Moreira-da-Silva/"
   }
 }
