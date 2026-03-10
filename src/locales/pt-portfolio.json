@@ -31,6 +31,7 @@
     {
       "title": "Booktrade",
       "description": "Plataforma para vendas e trocas de livros. site estatico",
+      "image": "/public/assets/booktrade.png",
       "tags": ["IoT", "Docker", "GitHub Actions"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     },
@@ -43,6 +44,7 @@
     {
       "title": "Athenas Buffet",
       "description": "Site para pedido e gerencia de buffet.",
+      "image": "/public/assets/atenas.png",
       "tags": ["Flutter", "Android", "CI/CD"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     }

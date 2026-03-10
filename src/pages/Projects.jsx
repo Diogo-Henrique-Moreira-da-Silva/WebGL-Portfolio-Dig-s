@@ -76,9 +76,23 @@ export function Projects() {
                   e.currentTarget.style.boxShadow = aero.card.boxShadow;
                 }}
               >
-                <span className="fw-bold" style={{ fontSize: "10px", letterSpacing: "2px", color: "#1a80c4" }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+              <span className="fw-bold" style={{ fontSize: "10px", letterSpacing: "2px", color: "#1a80c4" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              {project.image && (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  style={{
+                    width: "100%",
+                    height: "110px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    border: "1px solid rgba(255,255,255,0.6)"
+                  }}
+                />
+              )}
 
                 <h3 className="m-0 fw-bold" style={{ fontSize: "14px", color: "#0a3d6b", lineHeight: 1.3 }}>
                   {project.title}
