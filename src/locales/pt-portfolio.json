@@ -1,56 +1,56 @@
 {
   "about": {
-    "name": "João Silva",
-    "role": "Engenheiro de Software",
-    "bio": "Estudante de Engenharia de Software na PUC Minas",
+    "name": "Diogo Henrique Moreira da Silva",
+    "role": "Estudante de Engenharia de Software",
+    "bio": "Sou estudante de Engenharia de Software na PUC Minas, com interesse em desenvolvimento de sistemas, tecnologia e criação de soluções digitais.",
     "photo": "/assets/pfp.png",
     "location": "Brasil",
-    "email": "joao@email.com",
-    "linkedin": "https://linkedin.com/in/joaotestefake",
-    "github": "https://github.com/joaosilva"
+    "email": "diogo.henrique.silva1704@gmail.com",
+    "linkedin": "https://linkedin.com/",
+    "github": "https://github.com/Diogo-Henrique-Moreira-da-Silva/"
   },
   "experience": {
     "jobs": [
       {
-        "company": "empresa de ti",
-        "role": "Estagiário de Escravidão",
-        "period": "2001 - atual",
-        "description": "Desenvolvimento de levar café quente para supervisores."
+        "company": "Empresa do Setor Imobiliário",
+        "role": "Assistente Administrativo",
+        "period": "2023 - Atual",
+        "description": "Atuação na área administrativa em empresa do setor imobiliário, auxiliando na organização de documentos, acompanhamento de processos relacionados a propriedades, análise de informações cadastrais e apoio em atividades operacionais e estratégicas. Experiência com organização de dados, suporte em negociações e controle de informações relacionadas a imóveis e projetos."
       }
     ],
     "education": [
       {
         "institution": "PUC Minas",
         "degree": "Engenharia de Software",
-        "period": "2023 - 2027",
-        "description": "Foco em..."
+        "period": "2023 - 2028",
+        "description": "Graduação em Engenharia de Software com foco em desenvolvimento de sistemas, programação, arquitetura de software e engenharia de requisitos."
       }
     ]
   },
   "projects": [
     {
-      "title": "projeto 1",
-      "description": "Plataforma para logística e monitoramento de sensores em tempo real.",
+      "title": "Booktrade",
+      "description": "Plataforma para vendas e trocas de livros. site estatico",
       "tags": ["IoT", "Docker", "GitHub Actions"],
-      "link": "https://github.com/"
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     },
     {
-      "title": "projeto 2",
-      "description": "E-commerce",
-      "tags": ["E-commerce", "Java", "SonarQube"],
-      "link": "https://github.com/j"
+      "title": "Gear Up",
+      "description": "O projeto GearUp tem como objetivo facilitar o gerenciamento de serviços automotivos por meio de uma plataforma web intuitiva e eficiente. A aplicação permite que clientes cadastrem seus veículos, agendem serviços com facilidade e acompanhem o andamento de seus atendimentos em tempo real. Já os funcionários também podem realizar cadastros de serviços, além de visualizar os agendamentos, atualizar o status dos serviços e salvar observações nos agendamentos.",
+      "tags": ["Java", "Spring Boot", "SonarQube"],
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2025-1-ti3-9577100-gearup"
     },
     {
-      "title": "projeto 3",
-      "description": "Aplicativo mobile de sustentabilidade",
-      "tags": ["Flutter", "Qodana", "CI/CD", "Android"],
-      "link": "https://github.com/"
+      "title": "Athenas Buffet",
+      "description": "Site para pedido e gerencia de buffet.",
+      "tags": ["Flutter", "Android", "CI/CD"],
+      "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
     }
   ],
   "contact": {
-    "message": "Aberto a oportunidades em Backend, Frontend e Engenharia de Software.",
-    "email": "joao@email.com",
-    "linkedin": "https://linkedin.com/in/joao",
-    "github": "https://github.com/joao"
+    "message": "Aberto a oportunidades de estágio e projetos nas áreas de desenvolvimento Backend, Frontend e Engenharia de Software.",
+    "email": "diogo.henrique.silva1704@gmail.com",
+    "linkedin": "https://linkedin.com/",
+    "github": "https://github.com/Diogo-Henrique-Moreira-da-Silva/"
   }
 }
