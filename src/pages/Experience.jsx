@@ -198,10 +198,14 @@ function TimelineItem({ icon: Icon, accent, title, subtitle, period, description
 /* Componente principal */
 export function Experience() {
   const { t } = useTranslation('portfolio');
+
   const experience = t('experience', { returnObjects: true }) || {};
-  const jobs      = Array.isArray(experience.jobs)      ? experience.jobs      : [];
+  const jobs = Array.isArray(experience.jobs) ? experience.jobs : [];
   const education = Array.isArray(experience.education) ? experience.education : [];
 
+  console.log("experience:", experience);
+  console.log("jobs:", jobs);
+  console.log("education:", education);
   if (!jobs.length && !education.length) {
     return (
       <section className="exp-section w-100 h-100 d-flex align-items-center justify-content-center">
@@ -213,7 +217,8 @@ export function Experience() {
   }
 
   return (
-    <>
+    <section className="exp-section w-100 h-100">
+
       <style>{css}</style>
 
       <section className="exp-section w-100 h-100">
@@ -276,6 +281,6 @@ export function Experience() {
           </div>
         </div>
       </section>
-    </>
+    </section>
   );
 }
