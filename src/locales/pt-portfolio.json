@@ -30,7 +30,7 @@
   "projects": [
     {
       "title": "Booktrade",
-      "description": "Plataforma para vendas e trocas de livros. site estatico",
+      "description": "O projeto “BookTrade” visa solucionar problemas enfrentados por leitores que acumulam livros já lidos em casa, os quais acabam ocupando espaço nas estantes e dificultando a renovação de suas coleções. Por meio de uma plataforma web moderna, o sistema permite a troca de livros usados entre usuários, possibilitando que leitores adquiram novos títulos de forma econômica e sustentável. A aplicação oferece funcionalidades como cadastro de usuários, publicação de livros para troca, busca por títulos ou gêneros literários e comunicação direta entre os participantes para negociação. Focado na reutilização de recursos, na acessibilidade e na interação entre leitores, o sistema contribui para reduzir os custos de aquisição de novos livros e incentivar uma comunidade de leitura mais colaborativa e sustentável.",
       "image": "/assets/booktrade.png",
       "tags": ["IoT", "Docker", "GitHub Actions"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
@@ -38,12 +38,13 @@
     {
       "title": "Gear Up",
       "description": "O projeto GearUp tem como objetivo facilitar o gerenciamento de serviços automotivos por meio de uma plataforma web intuitiva e eficiente. A aplicação permite que clientes cadastrem seus veículos, agendem serviços com facilidade e acompanhem o andamento de seus atendimentos em tempo real. Já os funcionários também podem realizar cadastros de serviços, além de visualizar os agendamentos, atualizar o status dos serviços e salvar observações nos agendamentos.",
+      "image": "/assets/gearup.png",
       "tags": ["Java", "Spring Boot", "SonarQube"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2025-1-ti3-9577100-gearup"
     },
     {
       "title": "Athenas Buffet",
-      "description": "Site para pedido e gerencia de buffet.",
+      "description": "O projeto “Atenas Buffet” visa solucionar problemas de desorganização enfrentados por buffets que utilizam métodos manuais ou limitados, como o WhatsApp, para gerenciar suas operações. Através de uma plataforma web moderna, o sistema integra processos essenciais, como solicitação de orçamento, personalização de cardápios, agendamento de eventos, seleção de garçons e coleta de feedback. Focado na eficiência, centralização de informações e personalização, o sistema melhora a experiência dos clientes e eleva a competitividade do Buffet Atenas no mercado de eventos.",
       "image": "/assets/atenas.png",
       "tags": ["Flutter", "Android", "CI/CD"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"

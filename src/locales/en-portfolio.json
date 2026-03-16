@@ -30,7 +30,7 @@
   "projects": [
     {
       "title": "Booktrade",
-      "description": "Platform for buying, selling, and trading books. Static website.",
+      "description": "The “BookTrade” project aims to solve common problems faced by readers who accumulate books that have already been read and end up occupying unnecessary space at home. Through a modern web platform, the system enables users to exchange used books, allowing them to renew their collections in an economical and sustainable way. The application allows readers to browse available books, publish their own books for exchange, search by literary genre, and negotiate directly with other users through an integrated chat system. By promoting reuse, accessibility, and interaction between readers, the platform reduces the cost of acquiring new books while encouraging a more sustainable and collaborative reading community.",
       "image": "/assets/booktrade.png",
       "tags": ["IoT", "Docker", "GitHub Actions"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
@@ -38,12 +38,13 @@
     {
       "title": "Gear Up",
       "description": "The GearUp project aims to simplify the management of automotive services through an intuitive and efficient web platform. The application allows customers to register their vehicles, schedule services easily, and track the progress of their services in real time. Employees can also register services, view schedules, update service status, and save notes related to appointments.",
+      "image": "/assets/gearup.png",
       "tags": ["Java", "Spring Boot", "SonarQube"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2025-1-ti3-9577100-gearup"
     },
     {
       "title": "Athenas Buffet",
-      "description": "Website for ordering and managing buffet services.",
+      "description": "The “Atenas Buffet” project aims to solve organizational problems faced by buffet businesses that rely on manual or limited methods, such as WhatsApp, to manage their operations. Through a modern web platform, the system integrates essential processes such as budget requests, menu customization, event scheduling, waiter selection, and feedback collection. Focused on efficiency, information centralization, and personalization, the system improves the customer experience and enhances the competitiveness of Buffet Atenas in the events market.",
       "image": "/assets/atenas.png",
       "tags": ["Flutter", "Android", "CI/CD"],
       "link": "https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-2-ti2-3687100-atenasbuffet"
